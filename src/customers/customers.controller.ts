@@ -1,10 +1,13 @@
 import { Controller,Get,HttpCode,Post,Req, Version } from '@nestjs/common';
 import { Request } from 'express';
+import { GlobalHelpersService } from 'src/shared/global-helpers/global-helpers.service';
+import { UtilsService } from 'src/shared/utils/utils.service';
 @Controller({
     path:'customers',
     version:'1',
 })
 export class CustomersController {
+    constructor(private readonly utilService: UtilsService,private readonly globalHelpers :GlobalHelpersService) {}
     @Get()
     @HttpCode(201)
     findAll(): string {
@@ -21,5 +24,13 @@ export class CustomersController {
     @HttpCode(201)
     findAll2(): string {
         return 'This action returns all customers v2';
+    }
+    @Get('serverdate')
+    getServerDate(): string {
+        return this.utilService.getServerDate();
+    }
+    @Get('thaidate')
+    getServerDateThai(): string {
+        return this.globalHelpers.getThaiDate();
     }
 }
