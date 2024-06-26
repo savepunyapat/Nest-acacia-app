@@ -10,7 +10,7 @@ export class AppController {
     return this.appService.getHello();
   }
   @Get('')
-  getAPIIndex(): string {
-    return 'This is the API index';
+  getAPIIndex() {
+    return { message : 'This is the API index.... Version:'+ process.env.API_VERSION };
   }
 }
