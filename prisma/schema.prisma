@@ -7,7 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model categories {
+model Categories {
   id   Int    @id(map: "categories_pk") @default(autoincrement())
   name String @db.NVarChar(500)
+  @@map("categories")
+}
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  userId Int     @unique
+  User   User    @relation(fields: [userId], references: [id])
+  @@map("profiles")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String?  @db.VarChar(255)
+  email   String   @unique @db.VarChar(255)
+  password String   @db.VarChar(255)
+  permission String @db.VarChar(50) @default("member")
+  Profile Profile?
+  @@map("users")
 }
