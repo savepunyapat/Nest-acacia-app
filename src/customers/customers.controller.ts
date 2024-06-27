@@ -1,5 +1,6 @@
-import { Controller,Get,HttpCode,Post,Req, Version } from '@nestjs/common';
+import { Controller,Get,HttpCode,Post,Req, UseGuards, Version } from '@nestjs/common';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { GlobalHelpersService } from 'src/shared/global-helpers/global-helpers.service';
 import { UtilsService } from 'src/shared/utils/utils.service';
 @Controller({
@@ -29,6 +30,7 @@ export class CustomersController {
     getServerDate(): string {
         return this.utilService.getServerDate();
     }
+    @UseGuards(JwtAuthGuard)
     @Get('thaidate')
     getServerDateThai(): string {
         return this.globalHelpers.getThaiDate();
