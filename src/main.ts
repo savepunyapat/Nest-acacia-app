@@ -2,9 +2,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpStatus, ValidationPipe, VersioningType} from '@nestjs/common';
+import  helmet  from 'helmet';
+import { json } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: '*',
+  });
+  app.use(helmet());
+  app.use(json(
+    {
+      limit: '30mb',
+    }
+  ));
   app.useGlobalPipes(new ValidationPipe({
     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,// 422
   }));

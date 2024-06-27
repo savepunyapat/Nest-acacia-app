@@ -19,7 +19,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-
   async register(registerDto: RegisterDto) {
     try {
       const salt = await genSalt(10);
@@ -59,14 +58,39 @@ export class AuthService {
       throw new HttpException('รหัสผ่านไม่ถูกต้อง', 400);
     }
     const payload = {
-        user_id:user.id,
-        user_permission:user.permission
-    }
-    const token = await this.jwtService.signAsync(payload,{secret:process.env.JWT_SECRET});
+      user_id: user.id,
+      user_permission: user.permission,
+    };
+    const token = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+    });
     const tokenDecoded = this.jwtService.decode(token);
     return {
-        access_token:token,
-        expire_in : tokenDecoded['exp']
+      access_token: token,
+      expire_in: tokenDecoded['exp'],
     };
+  }
+  async getProfile(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+      select:{
+        id:true,
+        email:true,
+        name:true,
+        permission:true,
+        Profile:{
+            select:{
+                bio:true,
+            }
+        }
+      }
+    });
+    if (!user) {
+      throw new NotFoundException('ไม่พบผู้ใช้งาน');
+    }
+    return { user : user }
+
   }
 }
