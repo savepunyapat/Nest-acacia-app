@@ -90,7 +90,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException('ไม่พบผู้ใช้งาน');
     }
-    return { user : user }
+    return user;
 
   }
 }
